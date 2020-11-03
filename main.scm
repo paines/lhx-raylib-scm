@@ -33,6 +33,7 @@
      #:color
      (make-color (get-random-value 20 255) (get-random-value 20 255) 30 255))))
   (iota max-columns)))
+  
 (define cube-position (make-vector-3 0.0 0.0 0.0))
 (define (main-loop current-state)
  (if (not (window-should-close?))
@@ -73,7 +74,10 @@
              "raylib [core] example - 3d camera first person")
 (set-camera-mode cur-camera camera-mode/camera-first-person)
 (set-target-fps 60)
+
 (define (main)
  (main-loop (make-state #:camera cur-camera)))
 
-(thread-start! main)
+(cond-expand
+ (compiling (main))
+ (else (define game-thread (thread-start! main)) ))
